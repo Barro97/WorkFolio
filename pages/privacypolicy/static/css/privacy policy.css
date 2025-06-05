@@ -10,6 +10,42 @@
   overflow: hidden;
 }
 
+/* Academic notice styling */
+.academic-notice {
+  background-color: rgba(69, 212, 157, 0.1);
+  border: 2px solid #45d49d;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.academic-notice h2 {
+  color: #45d49d;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.academic-notice p {
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+.academic-footer {
+  background-color: rgba(69, 212, 157, 0.05);
+  border-left: 4px solid #45d49d;
+  padding: 20px;
+  margin-top: 30px;
+  border-radius: 4px;
+}
+
+.academic-footer p {
+  margin: 0;
+  font-style: italic;
+  text-align: center;
+  color: #45d49d;
+}
+
 /* Navigation button styles */
 .login-btn {
   padding: 8px 20px;
@@ -51,4 +87,14 @@
 .privacy-content ul {
   list-style-type: disc;
   padding-left: 20px;
+}
+
+/* Emphasis styling */
+.privacy-content em {
+  color: #45d49d;
+  font-style: italic;
+}
+
+.privacy-content strong {
+  color: #ffffff;
 }

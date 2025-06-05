@@ -18,43 +18,54 @@ document.addEventListener("DOMContentLoaded", function () {
 function editSection(sectionId) {
   const modal = document.getElementById("editModal");
   const modalFields = document.getElementById("modal-fields");
+  const gridContainer = document.querySelector(".grid-container");
   modal.style.display = "flex";
 
   // Clear previous fields
   modalFields.innerHTML = "";
 
   if (sectionId === "top-section") {
+    const firstName = gridContainer.dataset.firstName || "";
+    const lastName = gridContainer.dataset.lastName || "";
+    const role = gridContainer.dataset.role || "";
+
     modalFields.innerHTML = `
             <h2>Edit Profile Info</h2>
             <label for="firstName">First Name</label>
-            <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
+            <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" value="${firstName}" required>
             
             <label for="lastName">Last Name</label>
-            <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
+            <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" value="${lastName}" required>
             
             <label for="position">Position</label>
-            <input type="text" id="position" name="position" placeholder="Enter your current position" required>
+            <input type="text" id="position" name="position" placeholder="Enter your current position" value="${role}" required>
             
             <label for="profilePicture">Profile Picture</label>
             <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
         `;
   } else if (sectionId === "links") {
+    const linkedin = gridContainer.dataset.linkedin || "";
+    const github = gridContainer.dataset.github || "";
+    const facebook = gridContainer.dataset.facebook || "";
+
     modalFields.innerHTML = `
             <h2>Edit Social Media Links</h2>
             <label for="linkedin">LinkedIn Profile URL</label>
-            <input type="url" id="linkedin" name="linkedin" placeholder="https://www.linkedin.com/in/your-profile">
+            <input type="url" id="linkedin" name="linkedin" placeholder="https://www.linkedin.com/in/your-profile" value="${linkedin}">
             
             <label for="github">GitHub Profile URL</label>
-            <input type="url" id="github" name="github" placeholder="https://github.com/your-username">
+            <input type="url" id="github" name="github" placeholder="https://github.com/your-username" value="${github}">
             
             <label for="facebook">Facebook Profile URL</label>
-            <input type="url" id="facebook" name="facebook" placeholder="https://www.facebook.com/your-profile">
+            <input type="url" id="facebook" name="facebook" placeholder="https://www.facebook.com/your-profile" value="${facebook}">
         `;
   } else if (sectionId === "about") {
+    const aboutMe = gridContainer.dataset.aboutMe || "";
+
     modalFields.innerHTML = `
             <h2>Edit About Me</h2>
             <label for="aboutMe">Tell us about yourself</label>
-            <textarea id="aboutMe" name="aboutMe" placeholder="Share your story, experience, and aspirations..." required></textarea>
+            <textarea id="aboutMe" name="aboutMe" placeholder="Share your story, experience, and aspirations..." required>${aboutMe}</textarea>
         `;
   } else if (sectionId === "background") {
     // Fetch background data and organizations

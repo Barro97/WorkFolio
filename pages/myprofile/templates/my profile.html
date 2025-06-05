@@ -5,7 +5,14 @@
 {%endblock%}
 
 {% block main %}
-<main class="grid-container">
+<main class="grid-container" 
+      data-linkedin="{{ linkedin or '' }}" 
+      data-github="{{ github or '' }}" 
+      data-facebook="{{ facebook or '' }}"
+      data-about-me="{{ about_me or '' }}"
+      data-first-name="{{ first_name or '' }}"
+      data-last-name="{{ last_name or '' }}"
+      data-role="{{ role or '' }}">
     <div class="left-section">
         <section class="section" id="top-section">
             <img src={{profile_picture}} alt="profile picture"/>

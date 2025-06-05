@@ -77,7 +77,20 @@ def index():
         if org:
             edu['logo'] = org.get('logo', '')
 
-    return render_template('my profile.html', full_name=full_name, role=role, followers=followers, profile_picture=profile_picture, linkedin=linkedin, github=github, facebook=facebook, about_me=about_me, projects=projects, experiences=experiences, educations=educations)
+    return render_template('my profile.html', 
+                         full_name=full_name, 
+                         first_name=first_name,
+                         last_name=last_name,
+                         role=role, 
+                         followers=followers, 
+                         profile_picture=profile_picture, 
+                         linkedin=linkedin, 
+                         github=github, 
+                         facebook=facebook, 
+                         about_me=about_me, 
+                         projects=projects, 
+                         experiences=experiences, 
+                         educations=educations)
 
 @my_profile.route('/update_profile', methods=['POST'])
 def update_profile():
