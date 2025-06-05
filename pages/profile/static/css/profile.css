@@ -1,9 +1,14 @@
 body {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   min-height: 100vh;
   margin: 0;
+}
+
+main {
+  flex: 1;
+  padding-bottom: 4rem;
+  margin-bottom: 2rem;
 }
 
 .grid-container {
@@ -16,6 +21,7 @@ body {
   position: relative;
   bottom: -3rem;
   align-items: center;
+  margin-bottom: 3rem;
 }
 
 .left-section {
@@ -116,49 +122,85 @@ h1 {
   color: #45d49d;
 }
 
+#background {
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.experience,
+.education {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.experience h1,
+.education h1 {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 1rem 0;
+  padding: 0;
+  color: #45d49d;
+}
+
 #background img {
   height: 110px;
   width: 110px;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .description {
   display: flex;
   align-items: center;
+  gap: 20px;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.description:hover {
+  background-color: rgba(255, 255, 255, 0.04);
 }
 
 .description--text {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  position: relative;
-  right: -20px;
-  bottom: -7px;
+  flex: 1;
+  gap: 5px;
 }
 
 .description--text h1 {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   margin: 0;
   color: #ffffff;
+  font-size: 1.2rem;
 }
 
 .description--text h3 {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
-  margin-top: 10px;
-  margin-bottom: 0;
+  margin: 0;
   color: #abadc7;
   font-weight: normal;
+  font-size: 1rem;
 }
 
 .description--text h5 {
   display: flex;
-  justify-content: start;
-  margin-top: 10px;
+  justify-content: flex-start;
+  margin: 0;
   font-weight: normal;
+  color: #888;
+  font-size: 0.9rem;
 }
 
 .right-section {
@@ -397,7 +439,31 @@ h1 {
   }
 
   #background {
-    width: 80%;
+    width: 90%;
+    padding: 20px 15px;
+    gap: 1.5rem;
+  }
+
+  .description {
+    padding: 12px;
+    gap: 15px;
+  }
+
+  #background img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .description--text h1 {
+    font-size: 1.1rem;
+  }
+
+  .description--text h3 {
+    font-size: 0.9rem;
+  }
+
+  .description--text h5 {
+    font-size: 0.8rem;
   }
 
   #about {
@@ -546,28 +612,57 @@ h1 {
     min-height: 60px;
   }
 
-  /* Adjust description layout */
-  .description {
-    flex-direction: row;
-    align-items: center;
-    /* flex-wrap: wrap; */
-  }
-
-  .description--text {
-    font-size: x-small;
-  }
-
-  .description--text {
-    margin-top: 5px;
-  }
-
+  /* Background section mobile adjustments */
   #background {
-    width: 57%;
+    width: 90%;
+    padding: 15px 10px;
+    gap: 1rem;
+  }
+
+  .experience,
+  .education {
+    gap: 1rem;
+  }
+
+  .description {
+    padding: 10px;
+    gap: 10px;
+    flex-direction: column;
+    text-align: center;
   }
 
   #background img {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
+    align-self: center;
+  }
+
+  .description--text {
+    align-items: center;
+  }
+
+  .description--text h1,
+  .description--text h3,
+  .description--text h5 {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .description--text h1 {
+    font-size: 1rem;
+  }
+
+  .description--text h3 {
+    font-size: 0.85rem;
+  }
+
+  .description--text h5 {
+    font-size: 0.75rem;
+  }
+
+  /* Adjust description layout */
+  .description--text {
+    margin-top: 5px;
   }
 
   /* Ensure no horizontal overflow */
