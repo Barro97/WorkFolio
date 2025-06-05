@@ -8,6 +8,93 @@ body {
   padding: 0;
 }
 
+/* Academic notice styling */
+.academic-notice {
+  background-color: rgba(55, 180, 134, 0.2);
+  border: 2px solid #37b486;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.academic-notice h1 {
+  color: #37b486;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 2.2em;
+}
+
+.academic-notice p {
+  font-size: 1.3em;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+/* List styling */
+.features-list,
+.learning-list,
+.project-info {
+  text-align: left;
+  margin: 20px auto;
+  max-width: 600px;
+  padding-left: 0;
+}
+
+.features-list li,
+.learning-list li,
+.project-info li {
+  background-color: rgba(55, 180, 134, 0.1);
+  margin: 10px 0;
+  padding: 12px 15px;
+  border-radius: 5px;
+  border-left: 4px solid #37b486;
+  list-style: none;
+}
+
+.features-list li strong,
+.learning-list li strong,
+.project-info li strong {
+  color: #37b486;
+}
+
+/* Tech stack section */
+.tech-stack {
+  background-color: rgba(30, 30, 30, 0.8);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #37b486;
+}
+
+.tech-stack h3 {
+  color: #37b486;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.tech-stack p {
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* Academic footer */
+.academic-footer {
+  background-color: rgba(55, 180, 134, 0.1);
+  border-left: 4px solid #37b486;
+  padding: 20px;
+  margin-top: 25px;
+  border-radius: 5px;
+}
+
+.academic-footer p {
+  margin: 0;
+  font-style: italic;
+  text-align: center;
+  color: #37b486;
+  font-size: 1.1em;
+}
+
 /* Navigation button styles */
 .login-btn {
   padding: 8px 20px;
@@ -37,13 +124,13 @@ body {
 
 section {
   margin: 40px auto;
-  width: 60%;
+  width: 70%;
   text-align: center;
-  padding: 20px;
-  background-color: #1e1e1e;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  border: 1px solid #ccc;
+  padding: 30px;
+  background-color: rgba(30, 30, 30, 0.95);
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+  border: 1px solid #37b486;
 }
 
 section h1 {
@@ -56,6 +143,7 @@ section h2 {
   color: #37b486;
   font-size: 2em;
   margin-bottom: 15px;
+  margin-top: 30px;
 }
 
 section p {
@@ -66,26 +154,57 @@ section p {
 
 aside {
   margin: 20px auto;
-  width: 80%;
-  padding: 20px;
-  background-color: #333;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  width: 85%;
+  padding: 25px;
+  background-color: rgba(51, 51, 51, 0.95);
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+  border: 1px solid #37b486;
 }
 
 aside h2 {
   color: #37b486;
   font-size: 1.8em;
   margin-bottom: 15px;
+  margin-top: 0;
 }
 
 aside h3 {
-  font-size: 1.2em;
-  margin-top: 15px;
+  color: #37b486;
+  font-size: 1.3em;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 aside p {
   line-height: 1.6;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   font-size: 1em;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  section {
+    width: 90%;
+    padding: 20px;
+  }
+
+  aside {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .features-list,
+  .learning-list,
+  .project-info {
+    max-width: 100%;
+  }
+
+  .academic-notice h1 {
+    font-size: 1.8em;
+  }
+
+  .academic-notice p {
+    font-size: 1.1em;
+  }
 }
