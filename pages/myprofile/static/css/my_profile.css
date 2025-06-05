@@ -1,13 +1,23 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+main {
+  flex: 1;
+  padding-bottom: 2rem;
+}
+
 .grid-container {
   display: grid;
   grid-template-columns: 600px 600px;
-  height: 100%;
   grid-gap: 20px;
   grid-column-gap: 200px;
   justify-content: center;
-  position: relative;
-  bottom: -3rem;
-  align-items: center;
+  padding: 3rem 0;
+  align-items: start;
 }
 
 .left-section {
@@ -149,14 +159,7 @@ h1 {
 #projects {
   height: 550px;
   position: relative;
-  padding-top: 40px; /* Add space for the title and edit button */
-}
-
-footer {
-  height: 30px;
-  width: 90%;
-  position: relative;
-  bottom: -7em;
+  padding-top: 40px;
 }
 
 .social img {
