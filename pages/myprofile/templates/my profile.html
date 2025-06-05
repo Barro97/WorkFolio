@@ -19,9 +19,15 @@
         <section class="section" id="links">
             <h1>Social media</h1>
             <div class="social">
-                <a href={{linkedin}}><img src="https://blog.waalaxy.com/wp-content/uploads/2021/01/LinkedIn-Symbole.png" alt=""></a>
-                <a href={{github}}><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Github-desktop-logo-symbol.svg/2048px-Github-desktop-logo-symbol.svg.png" alt=""></a>
-                <a href={{facebook}}><img src="https://static-00.iconduck.com/assets.00/facebook-color-icon-2048x2048-bfly1vxr.png" alt=""></a>
+                {% if linkedin and linkedin != 'None' %}
+                <a href={{linkedin}}><img src="https://blog.waalaxy.com/wp-content/uploads/2021/01/LinkedIn-Symbole.png" alt="LinkedIn"></a>
+                {% endif %}
+                {% if github and github != 'None' %}
+                <a href={{github}}><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Github-desktop-logo-symbol.svg/2048px-Github-desktop-logo-symbol.svg.png" alt="GitHub"></a>
+                {% endif %}
+                {% if facebook and facebook != 'None' %}
+                <a href={{facebook}}><img src="https://static-00.iconduck.com/assets.00/facebook-color-icon-2048x2048-bfly1vxr.png" alt="Facebook"></a>
+                {% endif %}
             </div>
             <button class="edit-button" onclick="editSection('links')">Edit</button>
         </section>

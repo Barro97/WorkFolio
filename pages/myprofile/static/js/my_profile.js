@@ -1,228 +1,281 @@
+document.addEventListener("DOMContentLoaded", function () {
+  // Close modal when clicking outside
+  window.onclick = function (event) {
+    const modal = document.getElementById("editModal");
+    if (event.target == modal) {
+      closeModal();
+    }
+  };
 
-    document.addEventListener('DOMContentLoaded', function() {
-    // Add event listener to the Edit About Me button
-    document.getElementById('edit-about-me-btn').addEventListener('click', function () {
-        document.getElementById('edit-about-me-modal').style.display = 'block';
-    });
+  // Close modal with Escape key
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      closeModal();
+    }
+  });
 });
 
-    function editSection(sectionId) {
-    const modal = document.getElementById('editModal');
-    const modalFields = document.getElementById('modal-fields');
-    modal.style.display = 'flex';
+function editSection(sectionId) {
+  const modal = document.getElementById("editModal");
+  const modalFields = document.getElementById("modal-fields");
+  modal.style.display = "flex";
 
-    if (sectionId === 'top-section') {
-    // Set the fields for top-section
+  // Clear previous fields
+  modalFields.innerHTML = "";
+
+  if (sectionId === "top-section") {
     modalFields.innerHTML = `
-            <label for="firstName">First Name:</label>
-            <input type="text" id="firstName" name="firstName" required>
+            <h2>Edit Profile Info</h2>
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
             
-            <label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" name="lastName" required>
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
             
-            <label for="position">Position:</label>
-            <input type="text" id="position" name="position" required>
+            <label for="position">Position</label>
+            <input type="text" id="position" name="position" placeholder="Enter your current position" required>
             
-            <label for="profilePicture">Profile Picture:</label>
-            <input type="file" id="profilePicture" name="profilePicture">>
+            <label for="profilePicture">Profile Picture</label>
+            <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
         `;
-
-
-} else if (sectionId === 'links') {
-    // Set the fields for links
+  } else if (sectionId === "links") {
     modalFields.innerHTML = `
-            <label for="linkedin">LinkedIn:</label>
-            <input type="url" id="linkedin" name="linkedin" required>
+            <h2>Edit Social Media Links</h2>
+            <label for="linkedin">LinkedIn Profile URL</label>
+            <input type="url" id="linkedin" name="linkedin" placeholder="https://www.linkedin.com/in/your-profile">
             
-            <label for="github">GitHub:</label>
-            <input type="url" id="github" name="github" required>
+            <label for="github">GitHub Profile URL</label>
+            <input type="url" id="github" name="github" placeholder="https://github.com/your-username">
             
-            <label for="facebook">Facebook:</label>
-            <input type="url" id="facebook" name="facebook" required>
+            <label for="facebook">Facebook Profile URL</label>
+            <input type="url" id="facebook" name="facebook" placeholder="https://www.facebook.com/your-profile">
         `;
-
-
-}
-    else if (sectionId === 'about') {
-    // Set the fields for about section
+  } else if (sectionId === "about") {
     modalFields.innerHTML = `
-        <label for="aboutMe">About Me:</label>
-        <textarea id="aboutMe" name="aboutMe" required></textarea>
-    `;
-    }
-    else if (sectionId === 'projects') {
-    // Fetch and display projects
-    fetch('/get_projects')
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                let projectsHtml = '<ul>';
-                data.projects.forEach(project => {
-                    projectsHtml += `
-                        <div class="project-item">
-                            <span class="project-title">${project.title}</span>
-                            <button class="delete-project-button" data-project-id="${project._id}">X</button>
-                        </div>
+            <h2>Edit About Me</h2>
+            <label for="aboutMe">Tell us about yourself</label>
+            <textarea id="aboutMe" name="aboutMe" placeholder="Share your story, experience, and aspirations..." required></textarea>
+        `;
+  } else if (sectionId === "background") {
+    // Fetch organizations first
+    fetch("/get_organizations")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          let orgOptions = data.organizations
+            .map(
+              (org) =>
+                `<option value="${org.org_name}">${org.org_name}</option>`
+            )
+            .join("");
+
+          modalFields.innerHTML = `
+                        <h2>Add Background</h2>
+                        <label for="type">Type</label>
+                        <select id="type" name="type" required>
+                            <option value="">Select type</option>
+                            <option value="experience">Experience</option>
+                            <option value="education">Education</option>
+                        </select>
+                        
+                        <label for="organization">Organization</label>
+                        <select id="organization" name="organization" required>
+                            <option value="">Select organization</option>
+                            ${orgOptions}
+                        </select>
+                        
+                        <label for="position">Position/Degree</label>
+                        <input type="text" id="position" name="position" placeholder="Enter your position or degree" required>
+                        
+                        <label for="period">Period</label>
+                        <input type="text" id="period" name="period" placeholder="e.g., 2020 - Present" required>
                     `;
-                });
-                projectsHtml += '</div>';
-                modalFields.innerHTML = projectsHtml;
+        }
+      });
+  } else if (sectionId === "projects") {
+    fetch("/get_projects")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          modalFields.innerHTML = "<h2>Manage Projects</h2>";
+          if (data.projects.length > 0) {
+            data.projects.forEach((project) => {
+              modalFields.innerHTML += `
+                                <div class="project-item">
+                                    <span class="project-title">${project.title}</span>
+                                    <button type="button" class="delete-project-button" data-project-id="${project._id}">Delete</button>
+                                </div>
+                            `;
+            });
+          } else {
+            modalFields.innerHTML += "<p>No projects added yet.</p>";
+          }
 
-                // Add event listeners to delete buttons
-                document.querySelectorAll('.delete-project-button').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const projectId = this.dataset.projectId;
-                        fetch('/delete_project', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ projectId: projectId })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                alert('Project deleted successfully');
-                                // Remove the project from the list
-                                this.parentElement.remove();
-                            } else {
-                                alert('Error deleting project: ' + data.message);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('An error occurred while deleting the project');
-                        });
-                    });
-                });
-            } else {
-                alert('Error fetching projects: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while fetching the projects');
-        });
+          modalFields.innerHTML += `
+                        <p style="margin-top: 20px; color: #45d49d;">
+                            To add a new project, use the "Create Project" button in the projects section.
+                        </p>
+                    `;
+
+          // Add event listeners to delete buttons
+          document
+            .querySelectorAll(".delete-project-button")
+            .forEach((button) => {
+              button.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (confirm("Are you sure you want to delete this project?")) {
+                  const projectId = this.dataset.projectId;
+                  deleteProject(projectId, this.parentElement);
+                }
+              });
+            });
+        }
+      });
+  }
+
+  // Add the sectionId to the modal form
+  document.getElementById("editForm").dataset.sectionId = sectionId;
 }
-    else if (sectionId === 'background') {
-    // Fetch organizations to populate the dropdown
-    fetch('/get_organizations')
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                let orgOptions = '';
-                data.organizations.forEach(org => {
-                    orgOptions += `<option value="${org.org_name}">${org.org_name}</option>`;
-                });
 
-                modalFields.innerHTML = `
-                    <label for="type">Type:</label>
-                    <select id="type" name="type" required>
-                        <option value="experience">Experience</option>
-                        <option value="education">Education</option>
-                    </select>
-                    
-                    <label for="organization">Organization:</label>
-                    <select id="organization" name="organization" required>
-                        ${orgOptions}
-                    </select>
-                    
-                    <label for="position">Position/Description:</label>
-                    <input type="text" id="position" name="position" required>
-                    
-                    <label for="period">Period:</label>
-                    <input type="text" id="period" name="period" required>
+function closeModal() {
+  document.getElementById("editModal").style.display = "none";
+}
+
+function deleteProject(projectId, elementToRemove) {
+  fetch("/delete_project", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ projectId: projectId }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        elementToRemove.remove();
+        // If no more projects, show message
+        if (document.querySelectorAll(".project-item").length === 0) {
+          document.getElementById("modal-fields").innerHTML = `
+                    <h2>Manage Projects</h2>
+                    <p>No projects added yet.</p>
+                    <p style="margin-top: 20px; color: #45d49d;">
+                        To add a new project, use the "Create Project" button in the projects section.
+                    </p>
                 `;
-
-                // Add the sectionId as a hidden input field
-                modalFields.innerHTML += `<input type="hidden" name="sectionId" value="${sectionId}">`;
-
-                // Add the sectionId to the modal form to send it on submit
-                document.getElementById('editForm').dataset.sectionId = sectionId;
-            } else {
-                alert('Error fetching organizations: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while fetching the organizations');
-        });
+        }
+      } else {
+        alert("Error deleting project: " + data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("An error occurred while deleting the project");
+    });
 }
 
-
-
-    // Add the sectionId to the modal form to send it on submit
-    document.getElementById('editForm').dataset.sectionId = sectionId;
-}
-
-    function closeModal() {
-    document.getElementById('editModal').style.display = 'none';
-}
-
-    document.getElementById('editForm').addEventListener('submit', function(event) {
+document
+  .getElementById("editForm")
+  .addEventListener("submit", function (event) {
     event.preventDefault();
-
     const sectionId = event.target.dataset.sectionId;
     const formData = new FormData();
 
-    if (sectionId === 'top-section') {
-    formData.append('firstName', document.getElementById('firstName').value);
-    formData.append('lastName', document.getElementById('lastName').value);
-    formData.append('position', document.getElementById('position').value);
-    const profilePicture = document.getElementById('profilePicture').files[0];
-    if (profilePicture) {
-        formData.append('profilePicture', profilePicture);
+    if (sectionId === "top-section") {
+      formData.append(
+        "firstName",
+        document.getElementById("firstName").value.trim()
+      );
+      formData.append(
+        "lastName",
+        document.getElementById("lastName").value.trim()
+      );
+      formData.append(
+        "position",
+        document.getElementById("position").value.trim()
+      );
+      const profilePicture = document.getElementById("profilePicture").files[0];
+      if (profilePicture) {
+        formData.append("profilePicture", profilePicture);
+      }
+    } else if (sectionId === "links") {
+      formData.append(
+        "linkedin",
+        document.getElementById("linkedin").value.trim()
+      );
+      formData.append("github", document.getElementById("github").value.trim());
+      formData.append(
+        "facebook",
+        document.getElementById("facebook").value.trim()
+      );
+    } else if (sectionId === "about") {
+      formData.append(
+        "aboutMe",
+        document.getElementById("aboutMe").value.trim()
+      );
+    } else if (sectionId === "background") {
+      formData.append("type", document.getElementById("type").value);
+      formData.append(
+        "organization",
+        document.getElementById("organization").value
+      );
+      formData.append(
+        "position",
+        document.getElementById("position").value.trim()
+      );
+      formData.append("period", document.getElementById("period").value.trim());
     }
-    } else if (sectionId === 'links') {
-    formData.append('linkedin', document.getElementById('linkedin').value);
-    formData.append('github', document.getElementById('github').value);
-    formData.append('facebook', document.getElementById('facebook').value);
-}
-    else if (sectionId === 'about') {
-    formData.append('aboutMe', document.getElementById('aboutMe').value);
-}
-    else if (sectionId === 'background') {
-    formData.append('type', document.getElementById('type').value);
-    formData.append('organization', document.getElementById('organization').value);
-    formData.append('position', document.getElementById('position').value);
-    formData.append('period', document.getElementById('period').value);
-}
 
+    formData.append("sectionId", sectionId);
 
-    formData.append('sectionId', sectionId);
-    fetch('/update_profile', {
-    method: 'POST',
-    body: formData,
-})
-    .then(response => response.json())
-    .then(data => {
-    if (data.status === 'success') {
-    alert('Profile updated successfully');
-    closeModal();
+    fetch("/update_profile", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          // Update the UI with the new data
+          updateUI(sectionId, data);
+          closeModal();
+        } else {
+          alert("Error updating profile: " + data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("An error occurred while updating the profile");
+      });
+  });
 
-    // Update the UI with the new data
-    if (sectionId === 'top-section') {
-    document.querySelector('#top-section .my-details h1').textContent = data.first_name + ' ' + data.last_name;
-    document.querySelector('#top-section .my-details h3').textContent = data.role;
-} else if (sectionId === 'links') {
-    const linkedinElement = document.querySelector('#links a[href*="linkedin"]');
+function updateUI(sectionId, data) {
+  if (sectionId === "top-section") {
+    document.querySelector(
+      "#top-section .my-details h1"
+    ).textContent = `${data.first_name} ${data.last_name}`;
+    document.querySelector("#top-section .my-details h3").textContent =
+      data.role;
+    if (data.profile_picture) {
+      document.querySelector("#top-section img").src = data.profile_picture;
+    }
+  } else if (sectionId === "links") {
+    const linkedinElement = document.querySelector(
+      '#links a[href*="linkedin"]'
+    );
     const githubElement = document.querySelector('#links a[href*="github"]');
-    const facebookElement = document.querySelector('#links a[href*="facebook"]');
+    const facebookElement = document.querySelector(
+      '#links a[href*="facebook"]'
+    );
 
     if (linkedinElement) linkedinElement.href = data.linkedin;
     if (githubElement) githubElement.href = data.github;
     if (facebookElement) facebookElement.href = data.facebook;
-}
-    else if (sectionId === 'about') {
-    document.querySelector('#about div').textContent = data.about_me;
-}
-} else {
-    alert('Error updating profile: ' + data.message);
-}
-})
-    .catch(error => {
-    console.error('Error:', error);
-    alert('An error occurred while updating the profile');
-});
-});
 
+    // Refresh the page to update the social media icons visibility
+    location.reload();
+  } else if (sectionId === "about") {
+    document.querySelector("#about div").textContent = data.about_me;
+  } else if (sectionId === "background") {
+    // Refresh the page to show the new background item
+    location.reload();
+  }
+}
