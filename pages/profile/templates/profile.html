@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block page_head %}
+<title>Profile</title>
+{% endblock %}
+
+{% block main %}
+
+<main class="grid-container">
+    <div class="left-section">
+        <section class="section" id="top-section">
+            <img src="{{ user['profile_picture'] }}" alt="{{ user['first_name'] }} {{ user['last_name'] }}"/>
+            <div class="name">
+                <h1>{{ user['first_name'] }} {{ user['last_name'] }}</h1>
+                <h3>{{ user['role'] }}</h3>
+                <button id="chat-button"
+                        onclick="window.location.href='{{ url_for('chat.index', user_email=session['user']['email'], profile_email=user['email']) }}'">
+                    Chat
+                </button>
+            </div>
+            <div class="follows">
+                <button id="follow-button">+ Follow</button>
+                <h5 class="follow-count">Followers: {{ count }}</h5>
+            </div>
+        </section>
+        <section class="section" id="links">
+            <h1>Social media</h1>
+            <div class="social">
+                {% if user.linkedin %}
+                <a href="{{ user.linkedin }}"><img src="https://blog.waalaxy.com/wp-content/uploads/2021/01/LinkedIn-Symbole.png" alt=""></a>
+                {% endif %}
+                {% if user.github %}
+                <a href="{{ user.github }}"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Github-desktop-logo-symbol.svg/2048px-Github-desktop-logo-symbol.svg.png" alt=""></a>
+                {% endif %}
+                {% if user.facebook %}
+                <a href="{{ user.facebook }}"><img src="https://static-00.iconduck.com/assets.00/facebook-color-icon-2048x2048-bfly1vxr.png" alt=""></a>
+                {% endif %}
+            </div>
+        </section>
+        <section class="section" id="background">
+            <div class="experience">
+                <h1>Experience</h1>
+                {% for exp in experiences %}
+                <div class="description">
+                    <a href="/organization/{{exp.org_name }}">
+                        {% if exp.logo %}
+                        <img src="{{ exp.logo }}" alt="{{ exp.org_name }}" />
+                        {% endif %}
+                    </a>
+                    <div class="description--text">
+                        <h1>{{exp.org_name}}</h1>
+                        <h3>{{exp.description}}</h3>
+                        <h5>{{exp.period}}</h5>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="education">
+                <h1>Education</h1>
+                {% for edu in educations %}
+                <div class="description">
+                    <a href="/organization/{{edu.org_name }}">
+                        {% if edu.logo %}
+                        <img src="{{ edu.logo }}" alt="{{ edu.org_name }}" />
+                        {% endif %}
+                    </a>
+                    <div class="description--text">
+                        <h1>{{edu.org_name}}</h1>
+                        <h3>{{edu.description}}</h3>
+                        <h5>{{edu.period}}</h5>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+    <div class="right-section">
+
+        <section class="section scrollable" id="about">
+            <h1>About me</h1>
+            <div>{{ user.about_me }}</div>
+        </section>
+        <section class="section scrollable" id="projects">
+            <h1>Projects</h1>
+
+            <div class="projects">
+                {% for project in projects %}
+                <a href=/project/{{ project._id }} class="project-box">
+                    <div class="project-content">
+                        <div class="project-overlay">
+                            <img src="{{ project.image_url }}" alt="Project"/>
+                        </div>
+                        <div class="project-title">{{ project.title }}</div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</main>
+<script src="{{ url_for('profile.static', filename='js/profile.js') }}"></script>
+{%endblock%}

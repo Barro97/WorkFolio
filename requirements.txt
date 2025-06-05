@@ -1,0 +1,13 @@
+Flask==2.0.2
+
+pymongo[srv]==3.12.0
+
+python-dotenv==1.1.0
+# Python-dotenv reads the key-value pairs from a .env file and can set them as environment variables.
+# This is useful for managing configuration settings and sensitive information like database URIs.
+
+Werkzeug==2.0.2
+# Werkzeug is a comprehensive WSGI web application library. It is often
+# used as a utility library for various tasks such as request and response
+# handling, and it provides a built-in development server. It is used for
+# secure handling of file uploads and other utility functions in Flask applications.

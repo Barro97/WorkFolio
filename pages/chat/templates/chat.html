@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block page_head %}
+<title>Chat</title>
+{% endblock %}
+
+{% block main %}
+<main>
+    <div class="chat">
+        <div class="user-container" id="user-container">
+            <div class="profile-picture">
+                <img id="user-picture" src="{{ user_picture }}" alt="profile picture">
+            </div>
+            <div class="name">
+                <h1 id="user-name">{{ user_name }}</h1>
+                <h3 id="user-role">{{ user_role }}</h3>
+            </div>
+            <div class="profile-link">
+                <a href="{{ url_for('profile.view_profile', user_email=profile_email) }}">
+                    <img src="https://static-00.iconduck.com/assets.00/profile-user-icon-2048x2048-m41rxkoe.png"
+                         alt="User Profile">
+                </a>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-header">Chat with {{ user_name }}</div>
+            <div class="chat-messages" id="chat-messages">
+                {% for message in messages %}
+                <div class="message {{ 'user' if message.sender_email == user_email else '' }}">
+                    <div class="message-content">
+                        <p>{{ message.message | e }}</p>
+                        <span class="message-timestamp">{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+
+            <div class="chat-input">
+                <textarea id="message-input" placeholder="Type a message..."></textarea>
+                <label for="file-input" class="custom-file-upload">
+                    <img src="https://static.thenounproject.com/png/59103-200.png" alt="Upload Files Icon">
+                </label>
+                <input type="file" id="file-input">
+                <button id="send-button">Send</button>
+            </div>
+
+
+        </div>
+
+<div class="chat-sidebar">
+    <div class="chat-sidebar-header">
+        Previous Chats
+    </div>
+    <div id="chat-sidebar-users">
+        <!-- Users will be dynamically inserted here -->
+    </div>
+</div>
+
+    </div>
+</main>
+
+<script>
+    const userEmail = "{{ user_email }}";
+    const profileEmail = "{{ profile_email }}";
+</script>
+{% endblock %}
