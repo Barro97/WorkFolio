@@ -11,7 +11,7 @@
             <img src={{profile_picture}} alt="profile picture"/>
             <div class="my-details">
                 <h1>{{full_name}}</h1>
-                <h3>{{role}}</h3>
+                <h3 {% if not role %}onclick="editSection('top-section')" class="empty-text"{% endif %}>{{role if role else 'Add your role'}}</h3>
                 <h5 class="follow-count">followers: {{followers}}</h5>
             </div>
             <button class="edit-button" onclick="editSection('top-section')">Edit</button>
@@ -28,6 +28,12 @@
                 {% if facebook and facebook != 'None' %}
                 <a href={{facebook}}><img src="https://static-00.iconduck.com/assets.00/facebook-color-icon-2048x2048-bfly1vxr.png" alt="Facebook"></a>
                 {% endif %}
+                {% if not (linkedin or github or facebook) or (linkedin == 'None' and github == 'None' and facebook == 'None') %}
+                <div class="empty-section" onclick="editSection('links')">
+                    <i class="fi fi-rr-link-alt"></i>
+                    <p>Add your social media links</p>
+                </div>
+                {% endif %}
             </div>
             <button class="edit-button" onclick="editSection('links')">Edit</button>
         </section>
@@ -35,6 +41,7 @@
             <button class="edit-button" onclick="editSection('background')">Edit</button>
             <div class="experience">
                 <h1>Experience</h1>
+                {% if experiences %}
                 {% for exp in experiences %}
                 <div class="description">
                     <a href="/organization/{{exp.org_name }}">
@@ -49,9 +56,16 @@
                     </div>
                 </div>
                 {% endfor %}
+                {% else %}
+                <div class="empty-section" onclick="editSection('background')">
+                    <i class="fi fi-rr-briefcase"></i>
+                    <p>Add your work experience</p>
+                </div>
+                {% endif %}
             </div>
             <div class="education">
                 <h1>Education</h1>
+                {% if educations %}
                 {% for edu in educations %}
                 <div class="description">
                     <a href="/organization/{{edu.org_name }}">
@@ -66,6 +80,12 @@
                     </div>
                 </div>
                 {% endfor %}
+                {% else %}
+                <div class="empty-section" onclick="editSection('background')">
+                    <i class="fi fi-rr-graduation-cap"></i>
+                    <p>Add your education</p>
+                </div>
+                {% endif %}
             </div>
         </section>
     </div>
@@ -73,13 +93,21 @@
     <div class="right-section">
         <section class="section scrollable" id="about">
             <h1>About me</h1>
+            {% if about_me %}
             <div>{{about_me}}</div>
+            {% else %}
+            <div class="empty-section" onclick="editSection('about')">
+                <i class="fi fi-rr-user"></i>
+                <p>Tell others about yourself</p>
+            </div>
+            {% endif %}
             <button class="edit-button" onclick="editSection('about')">Edit</button>
         </section>
         <section class="section scrollable" id="projects">
             <h1>Projects</h1>
             <button class="edit-button" onclick="editSection('projects')">Edit</button>
             <div class="projects">
+                {% if projects %}
                 {% for project in projects %}
                 <a href=/project/{{ project._id }} class="project-box">
                     <div class="project-content">
@@ -90,21 +118,26 @@
                     </div>
                 </a>
                 {% endfor %}
+                {% else %}
+                <div class="empty-section" onclick="editSection('projects')">
+                    <i class="fi fi-rr-apps"></i>
+                    <p>Showcase your projects</p>
+                </div>
+                {% endif %}
             </div>
         </section>
     </div>
     <!-- Modal structure -->
-<div id="editModal" class="modal">
-    <div class="modal-content">
-        <span class="close-button" onclick="closeModal()">&times;</span>
-        <form id="editForm">
-            <div id="modal-fields">
-                <!-- Dynamic fields will be inserted here -->
-            </div>
-            <button type="submit">Save</button>
-        </form>
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <form id="editForm">
+                <div id="modal-fields">
+                    <!-- Dynamic fields will be inserted here -->
+                </div>
+                <button type="submit">Save</button>
+            </form>
+        </div>
     </div>
-</div>
-
 </main>
 {%endblock%}
