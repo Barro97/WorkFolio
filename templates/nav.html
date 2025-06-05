@@ -1,3 +1,4 @@
+{% if request.endpoint not in ['login.index', 'signup.signup_page'] %}
 <header>
   <nav class="nav">
     <a href="/home" class="nav-brand"><h1>WorkFolio</h1></a>
@@ -5,7 +6,7 @@
     <div class="search">
       <form action="/search_results">
         <input type="text" name="query" placeholder="Search..." />
-        <input type="submit" value="Go" />
+        <input type="submit" value="go" />
       </form>
     </div>
     <ul class="nav-links">
@@ -39,3 +40,4 @@
     {% endif %}
   </nav>
 </header>
+{% endif %}
