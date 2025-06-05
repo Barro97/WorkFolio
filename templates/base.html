@@ -1,19 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     {% block page_head %}
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>base</title>
-    {% endblock %}
-    {% include ('styles.html') %}
-</head>
-<body>
-{% if session['logged_in'] == true %}
-{% include ('nav.html') %}
-{% endif %}
-{% block main %}
-{% endblock %}
-{% include ('footer.html') %}
-{% include ('scripts.html') %}
-</body>
+    {% endblock %} {% include ('styles.html') %}
+  </head>
+  <body>
+    {% include ('nav.html') %} {% block main %} {% endblock %} {% include
+    ('footer.html') %} {% include ('scripts.html') %}
+  </body>
 </html>
