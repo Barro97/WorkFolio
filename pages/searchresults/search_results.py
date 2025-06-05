@@ -3,6 +3,7 @@ from pymongo.server_api import ServerApi
 import pymongo
 from flask import Blueprint, render_template, request, redirect, url_for
 from pymongo import MongoClient
+import os
 
 # about blueprint definition
 search_results = Blueprint(
@@ -15,8 +16,7 @@ search_results = Blueprint(
 
 
 # MongoDB setup
-uri = ("mongodb+srv://rinak:SbSaxSwP6TEHmWGw@workfolio.w1hkpdf.mongodb.net/"
-       "?retryWrites=true&w=majority&appName=Workfolio")
+uri = os.getenv('MONGO_URI')
 myclient = MongoClient(uri, server_api=ServerApi('1'))
 
 mydb = myclient['user_database']

@@ -4,6 +4,7 @@ from pymongo.server_api import ServerApi
 from werkzeug.utils import secure_filename
 import gridfs
 from bson import ObjectId
+import os
 
 # about blueprint definition
 home = Blueprint(
@@ -14,7 +15,7 @@ home = Blueprint(
     template_folder='templates'
 )
 
-uri = "mongodb+srv://rinak:SbSaxSwP6TEHmWGw@workfolio.w1hkpdf.mongodb.net/?retryWrites=true&w=majority&appName=Workfolio"
+uri = os.getenv('MONGO_URI')
 myclient = MongoClient(uri, server_api=ServerApi('1'))
 mydb = myclient['user_database']
 posts_collection = mydb['posts']

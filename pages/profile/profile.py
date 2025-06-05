@@ -2,6 +2,7 @@ from flask import *
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from bson.objectid import ObjectId
+import os
 
 profile = Blueprint(
     'profile',
@@ -12,7 +13,7 @@ profile = Blueprint(
 )
 
 # MongoDB setup
-uri = "mongodb+srv://rinak:SbSaxSwP6TEHmWGw@workfolio.w1hkpdf.mongodb.net/?retryWrites=true&w=majority&appName=Workfolio"
+uri = os.getenv('MONGO_URI')
 myclient = MongoClient(uri, server_api=ServerApi('1'))
 mydb = myclient['user_database']
 users_collection = mydb['users']

@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, flash, jsonify
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from werkzeug.security import generate_password_hash
+import os
 
 signup = Blueprint(
     'signup',
@@ -10,8 +12,7 @@ signup = Blueprint(
     template_folder='templates'
 )
 
-uri = ("mongodb+srv://rinak:SbSaxSwP6TEHmWGw@workfolio.w1hkpdf.mongodb.net/"
-       "?retryWrites=true&w=majority&appName=Workfolio")
+uri = os.getenv('MONGO_URI')
 myclient = MongoClient(uri, server_api=ServerApi('1'))
 mydb = myclient['user_database']
 users_collection = mydb['users']
@@ -35,7 +36,17 @@ def signup_page():
         if users_collection.find_one({"email": email}):
             return jsonify({'status': 'error', 'message': "Email already exists. Please use a different email address."}), 400
 
-        # Save the data directly without validation
+        # Basic password validation
+        if password != verify_password:
+            return jsonify({'status': 'error', 'message': "Passwords do not match."}), 400
+        
+        if len(password) < 8:
+            return jsonify({'status': 'error', 'message': "Password must be at least 8 characters long."}), 400
+
+        # Hash the password before storing
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+
+        # Save the data with hashed password
         user_data = {
             'first_name': first_name,
             'last_name': last_name,
@@ -46,7 +57,7 @@ def signup_page():
             'dob_year': dob_year,
             'country': country,
             'city': city,
-            'password': password,
+            'password': hashed_password,
             'profile_picture': 'https://w7.pngwing.com/pngs/753/432/png-transparent-user-profile-2018-in-sight-user-conference-expo-business-default-business-angle-service-people-thumbnail.png'
         }
         users_collection.insert_one(user_data)

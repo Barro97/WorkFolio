@@ -1,8 +1,9 @@
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
+import os
 
 # MongoDB setup
-uri = "mongodb+srv://rinak:SbSaxSwP6TEHmWGw@workfolio.w1hkpdf.mongodb.net/?retryWrites=true&w=majority&appName=Workfolio"
+uri = os.getenv('MONGO_URI')
 client = MongoClient(uri, server_api=ServerApi('1'))
 db = client['user_database']  # Specify your database name
 

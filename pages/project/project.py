@@ -5,6 +5,7 @@ from bson.objectid import ObjectId
 from datetime import datetime, timezone, timedelta
 import gridfs
 import io
+import os
 
 project = Blueprint(
     'project',
@@ -14,7 +15,7 @@ project = Blueprint(
     template_folder='templates'
 )
 
-uri = "mongodb+srv://rinak:SbSaxSwP6TEHmWGw@workfolio.w1hkpdf.mongodb.net/?retryWrites=true&w=majority&appName=Workfolio"
+uri = os.getenv('MONGO_URI')
 myclient = MongoClient(uri, server_api=ServerApi('1'))
 mydb = myclient['user_database']
 project_collection = mydb['projects']
