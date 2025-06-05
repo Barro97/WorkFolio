@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session
 
 # about blueprint definition
 about_us = Blueprint(
@@ -13,4 +13,5 @@ about_us = Blueprint(
 # Routes
 @about_us.route('/aboutus')
 def index():
-    return render_template('about us.html')
+    is_logged_in = session.get('logged_in', False)
+    return render_template('about us.html', is_logged_in=is_logged_in)

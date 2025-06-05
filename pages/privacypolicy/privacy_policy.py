@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session
 
 # about blueprint definition
 privacy_policy = Blueprint(
@@ -13,4 +13,5 @@ privacy_policy = Blueprint(
 # Routes
 @privacy_policy.route('/privacy_policy')
 def index():
-    return render_template('privacy policy.html')
+    is_logged_in = session.get('logged_in', False)
+    return render_template('privacy policy.html', is_logged_in=is_logged_in)

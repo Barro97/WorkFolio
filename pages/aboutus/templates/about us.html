@@ -24,6 +24,7 @@
     <header>
       <nav class="nav">
         <h1>WorkFolio</h1>
+        {% if is_logged_in %}
         <div class="search">
           <form action="{{ url_for('search_results.index') }}">
             <input type="text" name="query" placeholder="Search..." />
@@ -55,6 +56,15 @@
             </a>
           </li>
         </ul>
+        {% else %}
+        <ul class="nav-links">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login.index') }}">
+              <button class="login-btn">Log In / Sign Up</button>
+            </a>
+          </li>
+        </ul>
+        {% endif %}
       </nav>
     </header>
 
