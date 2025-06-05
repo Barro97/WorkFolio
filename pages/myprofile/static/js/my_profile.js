@@ -57,12 +57,17 @@ function editSection(sectionId) {
             <textarea id="aboutMe" name="aboutMe" placeholder="Share your story, experience, and aspirations..." required></textarea>
         `;
   } else if (sectionId === "background") {
-    // Fetch organizations first
-    fetch("/get_organizations")
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "success") {
-          let orgOptions = data.organizations
+    // Fetch background data and organizations
+    Promise.all([
+      fetch("/get_background").then((response) => response.json()),
+      fetch("/get_organizations").then((response) => response.json()),
+    ])
+      .then(([backgroundData, orgData]) => {
+        if (
+          backgroundData.status === "success" &&
+          orgData.status === "success"
+        ) {
+          let orgOptions = orgData.organizations
             .map(
               (org) =>
                 `<option value="${org.org_name}">${org.org_name}</option>`
@@ -70,27 +75,98 @@ function editSection(sectionId) {
             .join("");
 
           modalFields.innerHTML = `
-                        <h2>Add Background</h2>
-                        <label for="type">Type</label>
-                        <select id="type" name="type" required>
-                            <option value="">Select type</option>
-                            <option value="experience">Experience</option>
-                            <option value="education">Education</option>
-                        </select>
-                        
-                        <label for="organization">Organization</label>
-                        <select id="organization" name="organization" required>
-                            <option value="">Select organization</option>
-                            ${orgOptions}
-                        </select>
-                        
-                        <label for="position">Position/Degree</label>
-                        <input type="text" id="position" name="position" placeholder="Enter your position or degree" required>
-                        
-                        <label for="period">Period</label>
-                        <input type="text" id="period" name="period" placeholder="e.g., 2020 - Present" required>
-                    `;
+          <h2>Manage Background</h2>
+          
+          ${
+            backgroundData.experiences.length > 0
+              ? `
+            <h3 style="color: #45d49d; margin-top: 20px;">Experience</h3>
+            ${backgroundData.experiences
+              .map(
+                (exp) => `
+              <div class="project-item">
+                <div>
+                  <div class="project-title">${exp.org_name}</div>
+                  <div style="color: #aaa; font-size: 14px;">${exp.description} | ${exp.period}</div>
+                </div>
+                <button type="button" class="delete-project-button" data-type="experience" data-id="${exp._id}">Delete</button>
+              </div>
+            `
+              )
+              .join("")}
+          `
+              : '<h3 style="color: #45d49d; margin-top: 20px;">Experience</h3><p style="color: #aaa;">No experience added yet.</p>'
+          }
+          
+          ${
+            backgroundData.educations.length > 0
+              ? `
+            <h3 style="color: #45d49d; margin-top: 20px;">Education</h3>
+            ${backgroundData.educations
+              .map(
+                (edu) => `
+              <div class="project-item">
+                <div>
+                  <div class="project-title">${edu.org_name}</div>
+                  <div style="color: #aaa; font-size: 14px;">${edu.description} | ${edu.period}</div>
+                </div>
+                <button type="button" class="delete-project-button" data-type="education" data-id="${edu._id}">Delete</button>
+              </div>
+            `
+              )
+              .join("")}
+          `
+              : '<h3 style="color: #45d49d; margin-top: 20px;">Education</h3><p style="color: #aaa;">No education added yet.</p>'
+          }
+          
+          <h3 style="color: #45d49d; margin-top: 30px;">Add New</h3>
+          <label for="type">Type</label>
+          <select id="type" name="type" required>
+              <option value="">Select type</option>
+              <option value="experience">Experience</option>
+              <option value="education">Education</option>
+          </select>
+          
+          <label for="organization">Organization</label>
+          <select id="organization" name="organization" required>
+              <option value="">Select organization</option>
+              ${orgOptions}
+          </select>
+          
+          <label for="position">Position/Degree</label>
+          <input type="text" id="position" name="position" placeholder="Enter your position or degree" required>
+          
+          <label for="period">Period</label>
+          <input type="text" id="period" name="period" placeholder="e.g., 2020 - Present" required>
+        `;
+
+          // Add event listeners to delete buttons
+          document
+            .querySelectorAll(".delete-project-button")
+            .forEach((button) => {
+              button.addEventListener("click", function (e) {
+                e.preventDefault();
+                const type = this.dataset.type;
+                const id = this.dataset.id;
+                const itemName =
+                  this.closest(".project-item").querySelector(
+                    ".project-title"
+                  ).textContent;
+
+                if (
+                  confirm(
+                    `Are you sure you want to delete this ${type}: ${itemName}?`
+                  )
+                ) {
+                  deleteBackgroundItem(type, id, this.parentElement);
+                }
+              });
+            });
         }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        modalFields.innerHTML = "<p>Error loading background data.</p>";
       });
   } else if (sectionId === "projects") {
     fetch("/get_projects")
@@ -170,6 +246,43 @@ function deleteProject(projectId, elementToRemove) {
     .catch((error) => {
       console.error("Error:", error);
       alert("An error occurred while deleting the project");
+    });
+}
+
+function deleteBackgroundItem(type, itemId, elementToRemove) {
+  const endpoint =
+    type === "experience" ? "/delete_experience" : "/delete_education";
+  const idKey = type === "experience" ? "experienceId" : "educationId";
+
+  fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ [idKey]: itemId }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        elementToRemove.remove();
+
+        // Check if section is now empty and update display
+        const section = elementToRemove.closest("div");
+        const remainingItems = section.querySelectorAll(".project-item");
+        if (remainingItems.length === 0) {
+          const sectionTitle = section.querySelector("h3").textContent;
+          const emptyMessage = document.createElement("p");
+          emptyMessage.style.color = "#aaa";
+          emptyMessage.textContent = `No ${sectionTitle.toLowerCase()} added yet.`;
+          section.appendChild(emptyMessage);
+        }
+      } else {
+        alert("Error deleting " + type + ": " + data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("An error occurred while deleting the " + type);
     });
 }
 

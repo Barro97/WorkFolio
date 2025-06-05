@@ -217,3 +217,50 @@ def get_organizations():
     organizations = list(org_collection.find({}, {'_id': 0, 'org_name': 1}))
 
     return jsonify({'status': 'success', 'organizations': organizations})
+
+@my_profile.route('/delete_experience', methods=['POST'])
+def delete_experience():
+    if not session.get('logged_in'):
+        return jsonify({'status': 'error', 'message': 'User not logged in'})
+
+    experience_id = request.json.get('experienceId')
+    if not experience_id:
+        return jsonify({'status': 'error', 'message': 'Experience ID is required'})
+
+    # Delete the experience
+    experience_collection.delete_one({'_id': ObjectId(experience_id)})
+
+    return jsonify({'status': 'success', 'message': 'Experience deleted successfully'})
+
+@my_profile.route('/delete_education', methods=['POST'])
+def delete_education():
+    if not session.get('logged_in'):
+        return jsonify({'status': 'error', 'message': 'User not logged in'})
+
+    education_id = request.json.get('educationId')
+    if not education_id:
+        return jsonify({'status': 'error', 'message': 'Education ID is required'})
+
+    # Delete the education
+    education_collection.delete_one({'_id': ObjectId(education_id)})
+
+    return jsonify({'status': 'success', 'message': 'Education deleted successfully'})
+
+@my_profile.route('/get_background', methods=['GET'])
+def get_background():
+    if not session.get('logged_in'):
+        return jsonify({'status': 'error', 'message': 'User not logged in'})
+
+    user = session.get('user', {})
+    email = user.get('email')
+    
+    experiences = list(experience_collection.find({'user_email': email}, {'_id': 1, 'org_name': 1, 'description': 1, 'period': 1}))
+    educations = list(education_collection.find({'user_email': email}, {'_id': 1, 'org_name': 1, 'description': 1, 'period': 1}))
+
+    # Convert ObjectId to string
+    for exp in experiences:
+        exp['_id'] = str(exp['_id'])
+    for edu in educations:
+        edu['_id'] = str(edu['_id'])
+
+    return jsonify({'status': 'success', 'experiences': experiences, 'educations': educations})
