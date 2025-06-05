@@ -14,7 +14,7 @@
                 <h3>{{role}}</h3>
                 <h5 class="follow-count">followers: {{followers}}</h5>
             </div>
-            <button class="edit-button for-info" onclick="editSection('top-section')">Edit</button>
+            <button class="edit-button" onclick="editSection('top-section')">Edit</button>
         </section>
         <section class="section" id="links">
             <h1>Social media</h1>
@@ -23,9 +23,10 @@
                 <a href={{github}}><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Github-desktop-logo-symbol.svg/2048px-Github-desktop-logo-symbol.svg.png" alt=""></a>
                 <a href={{facebook}}><img src="https://static-00.iconduck.com/assets.00/facebook-color-icon-2048x2048-bfly1vxr.png" alt=""></a>
             </div>
-            <button class="edit-button for-social" onclick="editSection('links')">Edit</button>
+            <button class="edit-button" onclick="editSection('links')">Edit</button>
         </section>
         <section class="section" id="background">
+            <button class="edit-button" onclick="editSection('background')">Edit</button>
             <div class="experience">
                 <h1>Experience</h1>
                 {% for exp in experiences %}
@@ -60,7 +61,6 @@
                 </div>
                 {% endfor %}
             </div>
-            <button class="edit-button for-desc" onclick="editSection('background')">Edit</button>
         </section>
     </div>
 
@@ -68,10 +68,11 @@
         <section class="section scrollable" id="about">
             <h1>About me</h1>
             <div>{{about_me}}</div>
-            <button class="edit-button for-about" onclick="editSection('about')">Edit</button>
+            <button class="edit-button" onclick="editSection('about')">Edit</button>
         </section>
         <section class="section scrollable" id="projects">
             <h1>Projects</h1>
+            <button class="edit-button" onclick="editSection('projects')">Edit</button>
             <div class="projects">
                 {% for project in projects %}
                 <a href=/project/{{ project._id }} class="project-box">
@@ -84,7 +85,6 @@
                 </a>
                 {% endfor %}
             </div>
-            <button class="edit-button for-proj" onclick="editSection('projects')">Edit</button>
         </section>
     </div>
     <!-- Modal structure -->
