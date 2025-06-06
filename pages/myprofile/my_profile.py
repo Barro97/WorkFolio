@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify, current_app
+from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify, current_app, send_file
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from bson.objectid import ObjectId
+import gridfs
+import io
 import os
 from werkzeug.utils import secure_filename
 from utils import allowed_file
@@ -26,6 +28,7 @@ experience_collection = mydb['experience']
 education_collection = mydb['education']
 org_collection = mydb['organizations']
 posts_collection = mydb['posts']
+fs = gridfs.GridFS(mydb)
 UPLOAD_FOLDER = 'static/uploads'
 
 
@@ -42,6 +45,15 @@ def index():
     full_name = f"{first_name} {last_name}"
     role = user.get('role')
     profile_picture = user.get('profile_picture')
+    profile_picture_id = user.get('profile_picture_id')
+    
+    # If user has a profile_picture_id, generate GridFS URL
+    if profile_picture_id:
+        try:
+            profile_picture = url_for('my_profile.get_profile_picture', photo_id=profile_picture_id)
+        except Exception as e:
+            print(f'Error generating profile picture URL: {str(e)}')
+    
     followers = user.get('followers', 0)  # You can set a default value or fetch it from DB
     linkedin = user.get('linkedin')
     github = user.get('github')
@@ -120,9 +132,11 @@ def update_profile():
             file = request.files['profilePicture']
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-                file.save(file_path)
-                profile_picture_url = url_for('static', filename='uploads/' + filename)
+                # Save file to GridFS instead of local storage
+                file_id = fs.put(file, filename=filename, content_type=file.content_type)
+                update_data['profile_picture_id'] = str(file_id)
+                # Generate URL for the GridFS stored image
+                profile_picture_url = url_for('my_profile.get_profile_picture', photo_id=file_id)
                 update_data['profile_picture'] = profile_picture_url
 
     elif section_id == 'links':
@@ -277,3 +291,14 @@ def get_background():
         edu['_id'] = str(edu['_id'])
 
     return jsonify({'status': 'success', 'experiences': experiences, 'educations': educations})
+
+@my_profile.route('/get_profile_picture/<photo_id>', methods=['GET'])
+def get_profile_picture(photo_id):
+    try:
+        photo_id = ObjectId(photo_id)  # Ensure photo_id is an ObjectId
+        photo = fs.get(photo_id)
+        content_type = photo.content_type if photo.content_type else 'application/octet-stream'
+        return send_file(photo, mimetype=content_type, download_name=photo.filename)
+    except Exception as e:
+        print(f'Error fetching profile picture: {str(e)}')
+        return jsonify({'success': False, 'error': str(e)})

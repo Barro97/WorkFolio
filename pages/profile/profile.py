@@ -34,6 +34,13 @@ def view_profile(user_email):
 
         if user:
             session['profile_owner'] = user_email
+            
+            # Handle GridFS profile pictures
+            if 'profile_picture_id' in user and user['profile_picture_id']:
+                try:
+                    user['profile_picture'] = url_for('my_profile.get_profile_picture', photo_id=user['profile_picture_id'])
+                except Exception as e:
+                    print(f'Error generating profile picture URL: {str(e)}')
             projects = list(project_collection.find({'owner': user_email}))
             count = followers_collection.count_documents({'followee': session.get('profile_owner')})
             experiences = list(experience_collection.find({'user_email': user_email}))

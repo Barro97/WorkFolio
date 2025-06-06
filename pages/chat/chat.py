@@ -55,6 +55,14 @@ def index(user_email, profile_email):
         user_name = f"{first_name} {last_name}"
         user_role = user_data.get('role', '')
         user_picture = user_data.get('profile_picture', '')
+        profile_picture_id = user_data.get('profile_picture_id')
+        
+        # If user has a profile_picture_id, generate GridFS URL
+        if profile_picture_id:
+            try:
+                user_picture = url_for('my_profile.get_profile_picture', photo_id=profile_picture_id)
+            except Exception as e:
+                print(f'Error generating profile picture URL: {str(e)}')
 
         # Fetch messages between the two users
         messages = messages_collection.find({
@@ -153,12 +161,22 @@ def latest_chats(user_email):
     for chat_user in chat_users:
         user_data = users_collection.find_one({'email': chat_user['_id']})
         if user_data:
+            profile_picture = user_data.get('profile_picture', '')
+            profile_picture_id = user_data.get('profile_picture_id')
+            
+            # If user has a profile_picture_id, generate GridFS URL
+            if profile_picture_id:
+                try:
+                    profile_picture = url_for('my_profile.get_profile_picture', photo_id=profile_picture_id)
+                except Exception as e:
+                    print(f'Error generating profile picture URL: {str(e)}')
+            
             latest_chats.append({
                 'email': user_data['email'],
                 'first_name': user_data.get('first_name', ''),
                 'last_name': user_data.get('last_name', ''),
                 'role': user_data.get('role', ''),
-                'profile_picture': user_data.get('profile_picture', '')
+                'profile_picture': profile_picture
             })
 
     return jsonify({'latest_chats': latest_chats})

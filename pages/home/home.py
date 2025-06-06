@@ -51,6 +51,14 @@ def show_likes(post_id):
         user = users_collection.find_one({'email': like['liker']})  # Find the user who liked the post
         if user:
             user['_id'] = ''  # Remove the '_id' field from the user document
+            
+            # Handle GridFS profile pictures
+            if 'profile_picture_id' in user and user['profile_picture_id']:
+                try:
+                    user['profile_picture'] = url_for('my_profile.get_profile_picture', photo_id=user['profile_picture_id'])
+                except Exception as e:
+                    print(f'Error generating profile picture URL: {str(e)}')
+            
             users_that_liked.append(user)  # Add the user to the list
     return jsonify({'users': users_that_liked})  # Return the list of users who liked the post as JSON
 
@@ -64,6 +72,14 @@ def show_comments(post_id):
         user = users_collection.find_one({'email': comment['commenter']})  # Find the user who commented
         if user:
             user['_id'] = ''  # Remove the '_id' field from the user document
+            
+            # Handle GridFS profile pictures
+            if 'profile_picture_id' in user and user['profile_picture_id']:
+                try:
+                    user['profile_picture'] = url_for('my_profile.get_profile_picture', photo_id=user['profile_picture_id'])
+                except Exception as e:
+                    print(f'Error generating profile picture URL: {str(e)}')
+            
             users_that_commented.append({'user': user, 'comment': comment})  # Add the user and comment to the list
     print(users_that_commented)
     return jsonify({'users': users_that_commented})  # Return the list of users who commented as JSON
@@ -78,6 +94,14 @@ def show_shares(post_id):
         user = users_collection.find_one({'email': share['sharer']}) # Find the user who shared the post
         if user:
             user['_id'] = ''  # Remove the '_id' field from the user document
+            
+            # Handle GridFS profile pictures
+            if 'profile_picture_id' in user and user['profile_picture_id']:
+                try:
+                    user['profile_picture'] = url_for('my_profile.get_profile_picture', photo_id=user['profile_picture_id'])
+                except Exception as e:
+                    print(f'Error generating profile picture URL: {str(e)}')
+            
             users_that_shared.append({'user': user, 'share': share})  # Add the user to the list
         print(users_that_shared)
     return jsonify({'users': users_that_shared})
@@ -110,6 +134,14 @@ def show_posts():
         post['_id'] = str(post['_id'])  # Convert ObjectId to string for JSON serialization
         post['user'] = users_collection.find_one({'email': post['owner']})
         post['user']['_id'] = str(post['user']['_id'])
+        
+        # Handle GridFS profile pictures
+        if 'profile_picture_id' in post['user'] and post['user']['profile_picture_id']:
+            try:
+                post['user']['profile_picture'] = url_for('my_profile.get_profile_picture', photo_id=post['user']['profile_picture_id'])
+            except Exception as e:
+                print(f'Error generating profile picture URL: {str(e)}')
+        
         post['likes'] = likes_collection.count_documents(
             {'post_id': post['_id']})  # Count the number of likes for the post
         post['comments'] = comments_collection.count_documents({'post_id': post['_id']})
